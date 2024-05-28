@@ -13,27 +13,17 @@ export default async function Home() {
   const allItems = await database.query.items.findMany();
 
   return (
-    <main className="container mx-auto py-12">
-      {session ? <SignOut /> : <SignIn />}
+    <main className="container mx-auto py-12 space-y-6">
+      <h2 className="text-2xl font-bold"> Items For Sale</h2>
 
-      {session?.user?.name}
-
-      <form
-        action={async (formData: FormData) => {
-          "use server";
-          await database.insert(items).values({
-            name: formData.get("name") as string,
-            userId: session?.user?.id!,
-          });
-          revalidatePath("/");
-        }}
-      >
-        <Input name="name" placeholder="Name your item" />
-        <Button type="submit">Post item</Button>
-      </form>
-      {allItems.map((item) => (
-        <div key={item.id}>{item.name}</div>
-      ))}
+      <div className="grid grid-cols-4 gap-8">
+        {allItems.map((item) => (
+          <div className=" border rounded-xl border-black p-8 " key={item.id}>
+            {item.name}
+            StartingPrice: {item.startingPrice}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
